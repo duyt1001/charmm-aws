@@ -23,7 +23,7 @@ export class CharmmAwsStack extends cdk.Stack {
     if (DeployEnv === 'prod' || DeployEnv === 'production') {
       charmmAmi = 'ami-0565b5221d36a0fb7';  // cuda
       charmmInstType = ec2.InstanceClass.G4DN;
-      charmmInstSize = ec2.InstanceSize.XLARGE;
+      charmmInstSize = ec2.InstanceSize.XLARGE4;
     }
     // aws ec2 describe-images --region us-east-1 --image-ids ami-0565b5221d36a0fb7
     const charmmRootDev = '/dev/xvda';
