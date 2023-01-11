@@ -42,10 +42,11 @@ echo "Previously finished on $prev steps, will continue until $CNTS steps"
 # Last stepN_production.inp
 for cnt in `seq $((prev +1)) $CNTS` ; do
       outfile=${inp}.cnt=${cnt}.out
+      date
       echo -n "${PWD//$HOME\//}> "
       echo " mpirun charmm cnt=$cnt -i $inp -o $outfile"
       [ -z $DRYRUN ] && mpirun charmm cnt=$cnt -i $inp -o $outfile
-      tail -7 $outfile
+      tail -n7 $outfile
 done
 
 

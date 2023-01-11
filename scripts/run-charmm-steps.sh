@@ -47,13 +47,13 @@ do
 	echo -n "${PWD//$HOME\//}> "
         echo " mpirun charmm -i $inp -o $outfile"
 	[ -z $DRYRUN ] && mpirun charmm -i $inp -o $outfile
-	tail -7 $outfile
+	tail -n7 $outfile
 	cd ..
     else
 	echo -n "${PWD//$HOME\//}> "
         echo " charmm -i $inp -o $outfile"
         [ -z $DRYRUN ] && charmm -i $inp -o $outfile
-	tail -7 $outfile
+	tail -n7 $outfile
     fi
 done
 
@@ -62,10 +62,11 @@ if [ $inp = *"production.inp" ] ; then
     cd charmm_openmm
     for cnt in `seq 1 $CNTS` ; do
       outfile=${inp}.cnt=${cnt}.out
+      date
       echo -n "${PWD//$HOME\//}> "
       echo " mpirun charmm cnt=$cnt -i $inp -o $outfile"
       [ -z $DRYRUN ] && mpirun charmm cnt=$cnt -i $inp -o $outfile
-      tail -7 $outfile
+      tail -n7 $outfile
     done
     cd .. 
 fi
