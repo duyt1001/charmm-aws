@@ -20,10 +20,18 @@ export class CharmmAwsStack extends cdk.Stack {
     let charmmAmi = 'ami-0fe472d8a85bc7b0e';  // amazon linux 2
     let charmmInstType = ec2.InstanceClass.T2;
     let charmmInstSize = ec2.InstanceSize.MICRO;
-    if (DeployEnv === 'prod' || DeployEnv === 'production') {
+    if (DeployEnv === 'charmm2') {
+      charmmAmi = 'ami-0565b5221d36a0fb7';  // cuda
+      charmmInstType = ec2.InstanceClass.G4DN;
+      charmmInstSize = ec2.InstanceSize.XLARGE;
+    } else if (DeployEnv === 'charmm3') {
       charmmAmi = 'ami-0565b5221d36a0fb7';  // cuda
       charmmInstType = ec2.InstanceClass.G4DN;
       charmmInstSize = ec2.InstanceSize.XLARGE4;
+    } else if (DeployEnv === 'charmm4') {
+      charmmAmi = 'ami-0565b5221d36a0fb7';  // cuda
+      charmmInstType = ec2.InstanceClass.G4DN;
+      charmmInstSize = ec2.InstanceSize.METAL;
     }
     // aws ec2 describe-images --region us-east-1 --image-ids ami-0565b5221d36a0fb7
     const charmmRootDev = '/dev/xvda';
@@ -55,7 +63,7 @@ export class CharmmAwsStack extends cdk.Stack {
     };
 
     const charmm3 = new ec2.Instance(this, 'charmm3', {
-      instanceName: 'charmm3',
+      instanceName: DeployEnv,
       vpc: defaultVpc,
       vpcSubnets: {subnetType: ec2.SubnetType.PUBLIC},
       role: role,
