@@ -20,7 +20,11 @@ export class CharmmAwsStack extends cdk.Stack {
     let charmmAmi = 'ami-0fe472d8a85bc7b0e';  // amazon linux 2
     let charmmInstType = ec2.InstanceClass.T2;
     let charmmInstSize = ec2.InstanceSize.MICRO;
-    if (DeployEnv === 'charmm2') {
+    if (DeployEnv === 'charmm1') {
+      charmmAmi = 'ami-0565b5221d36a0fb7';  // cuda
+      charmmInstType = ec2.InstanceClass.G4DN;
+      charmmInstSize = ec2.InstanceSize.XLARGE;
+    } else if (DeployEnv === 'charmm2') {
       charmmAmi = 'ami-0565b5221d36a0fb7';  // cuda
       charmmInstType = ec2.InstanceClass.G4DN;
       charmmInstSize = ec2.InstanceSize.XLARGE;
