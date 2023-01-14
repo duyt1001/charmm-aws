@@ -48,6 +48,11 @@ export class CharmmAwsStack extends cdk.Stack {
       destinationBucket: bucket,
       destinationKeyPrefix: 'charmm/install_scripts/'
     })
+    new s3deploy.BucketDeployment(this, 'RunScripts', {
+      sources: [s3deploy.Source.asset('./scripts')],
+      destinationBucket: bucket,
+      destinationKeyPrefix: 'charmm/bin/'
+    })
     const userDataScript = readFileSync('./lib/user-data.sh', 'utf-8');
 
     // ec2 instance variables
