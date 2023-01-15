@@ -6,10 +6,10 @@ SIM=$2
 # Usage: continue-steps.sh <cnts> <simulation>
 
 prev_last_cnt() {
-  # look for step5_3.pdb
-  done_pdbs=$(ls step[0-9]*_[0-9]*.pdb 2>/dev/null)
+  # look for like step5_3.pdb
+  done_pdbs=$(ls -1 step[0-9]*_[0-9]*.pdb 2>/dev/null)
   [ x"$done_pdbs" = x ] && echo 0 && return
-  last_pdb=$(awk '{print $NF}' <<< $done_pdbs)
+  last_pdb=$(ls *$(ls -1 step[0-9]*_[0-9]*.pdb 2>/dev/null | cut -d_ -f2 | sort -n | tail -n1))
   echo $last_pdb | awk -F_ '{print $2}' | awk -F. '{print $1}'
 }
 
