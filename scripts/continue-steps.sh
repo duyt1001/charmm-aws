@@ -46,14 +46,21 @@ for cnt in `seq $((prev +1)) $CNTS` ; do
       echo -n "${PWD//$HOME\//}> "
       echo " mpirun charmm cnt=$cnt -i $inp -o $outfile"
       [ -z $DRYRUN ] && mpirun charmm cnt=$cnt -i $inp -o $outfile
-      tail -n7 $outfile
+      if grep "NORMAL TERMINATION BY NORMAL STOP" $outfile; then
+        RET="_$cnt"
+        tail -n7 $outfile
+      else
+        RET="_${cnt}_failed"
+        grep -B3 TERMINATING $outfile
+        break
+      fi
 done
 
 
 # All done, archive results and send to s3
 cd .. 
 SIM=$(basename $PWD)
-RESULTS=${SIM}_results.tgz
+RESULTS=${SIM}_results${RET}.tgz
 cd ..
 echo "tar cfz $RESULTS $SIM"
 [ -z $DRYRUN ] && tar cfz $RESULTS $SIM

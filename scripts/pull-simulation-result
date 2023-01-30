@@ -1,0 +1,13 @@
+HOST=$1
+SimResult=$2
+
+[ x$SimResult = x ] && echo "Usage: $0 <host> <sim>" >&2 && exit 1
+
+# Pull from $host and untar
+scp $HOST:$SimResult .
+tar xfz $SimResult
+
+# catdcd
+SIM=${SimResult/_result*/}
+cd $SIM/charmm_openmm
+cat-all-dcds

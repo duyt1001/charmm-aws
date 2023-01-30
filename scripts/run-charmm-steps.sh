@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-SIM=${1:-help}
-CNTS=3	# how many cnt (iterations) of stepN_production
+CNTS=${1:-3}	# how many cnt (iterations) of stepN_production
+SIM=${2:-help}
 #DRYRUN=1	# comment or set to empty to real run
 
 # find the workspace:
@@ -66,13 +66,20 @@ if [ $inp = *"production.inp" ] ; then
       echo -n "${PWD//$HOME\//}> "
       echo " mpirun charmm cnt=$cnt -i $inp -o $outfile"
       [ -z $DRYRUN ] && mpirun charmm cnt=$cnt -i $inp -o $outfile
-      tail -n7 $outfile
+      if grep "NORMAL TERMINATION BY NORMAL STOP" $outfile; then
+        RET="_$cnt"
+        tail -n7 $outfile
+      else
+        RET="_${cnt}_failed"
+        grep -B3 TERMINATING $outfile
+        break
+      fi
     done
     cd .. 
 fi
 
 # All done, archive results and send to s3
-RESULTS=${SIM}_results.tgz
+RESULTS=${SIM}_results${RET}.tgz
 cd ..
 echo "tar cfz $RESULTS $SIM"
 [ -z $DRYRUN ] && tar cfz $RESULTS $SIM
