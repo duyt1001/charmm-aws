@@ -1,10 +1,18 @@
-HOST=$1
+Host=$1
 SimResult=$2
 
-[ x$SimResult = x ] && echo "Usage: $0 <host> <sim>" >&2 && exit 1
+[ x"$Host" = x ] && echo "Usage: $0 <Host> <sim>" >&2 && exit 1
 
-# Pull from $host and untar
-scp $HOST:$SimResult .
+if [ x"$SimResult" = x ]; then
+  SimResult=$(ssh $Host DRYRUN=Name bash bin/tar-sim.sh)
+  SimResultPath=$(ssh $Host ls $SimResult 2>/dev/null)
+  if [ x"$SimResultPath" = x ]; then
+    ssh $Host bash bin/tar-sim.sh
+  fi
+fi
+
+# Pull from $Host and untar
+scp $Host:$SimResult .
 tar xfz $SimResult
 
 # catdcd
